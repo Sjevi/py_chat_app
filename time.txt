@@ -1,0 +1,1 @@
+f'[({str(date_time_stamp)})]'.encode("utf-8") + 
