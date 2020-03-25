@@ -3,7 +3,7 @@ import select
 from _datetime import datetime
 import time
 
-HEADER_LENGTH = 10
+HEADER_LENGTH = 40
 IP = '127.0.0.1'
 PORT = 1234
 
@@ -42,23 +42,22 @@ while True:
             sockets_list.append(client_socket)
             clients[client_socket] = user
             date_time_stamp = datetime.fromtimestamp(time.time())
-            print(f"[{date_time_stamp}]: Accepted new connection from {client_address[0]}:{client_address[1]} username: {user['data'].decode('utf-8')}")
+            print(f"[{date_time_stamp.strftime('%Y-%m-%d %H:%M:%S')}]: Accepted new connection from {client_address[0]}:{client_address[1]} username: {user['data'].decode('utf-8')}")
 
         else:
             message = receive_message(notified_socket)
 
             if message is False:
                 date_time_stamp = datetime.fromtimestamp(time.time())
-                print(f"[{date_time_stamp}]: Closed connection for {clients[notified_socket]['data'].decode('utf-8')}")
+                print(f"[{date_time_stamp.strftime('%Y-%m-%d %H:%M:%S')}]: Closed connection for {clients[notified_socket]['data'].decode('utf-8')}")
                 sockets_list.remove(notified_socket)
                 del clients[notified_socket]
                 continue
             user = clients[notified_socket]
-            print(f"[{date_time_stamp}]: Received message from {user['data'].decode('utf-8')}: {message['data'].decode('utf-8')}")
+            print(f"[{date_time_stamp.strftime('%Y-%m-%d %H:%M:%S')}]: Received message from {user['data'].decode('utf-8')}: {message['data'].decode('utf-8')}")
 
             for client_socket in clients:
                 if client_socket != notified_socket:
-                    date_time_stamp = datetime.fromtimestamp(time.time())
                     client_socket.send(user['header'] + user['data'] + message ['header'] + message['data'])
 
     for notified_socket in exception_sockets:

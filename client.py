@@ -3,9 +3,9 @@ import errno
 import sys
 from _datetime import datetime
 import time
+from threading import Thread
 
-
-HEADER_LENGTH = 10
+HEADER_LENGTH = 40
 IP = '127.0.0.1'
 PORT = 1234
 
@@ -21,7 +21,7 @@ client_socket.send(username_header+username)
 
 while True:
     date_time_stamp = datetime.fromtimestamp(time.time())
-    message = input(f"[{date_time_stamp}]: {my_username} > ")
+    message = input(f"[{date_time_stamp.strftime('%Y-%m-%d %H:%M:%S')}]: {my_username} > ")
 
     if message:
         message = message.encode('utf-8')
@@ -40,8 +40,8 @@ while True:
             message_header = client_socket.recv(HEADER_LENGTH)
             message_length = int(message_header.decode('utf-8').strip())
             message = client_socket.recv(message_length).decode('utf-8')
-
-            print(f"{username} > {message}")
+            date_time_stamp = datetime.fromtimestamp(time.time())
+            print(f"[{date_time_stamp.strftime('%Y-%m-%d %H:%M:%S')}]: {username} > {message}")
 
     except IOError as e:
         if e.errno != errno.EAGAIN and e.errno != errno.EWOULDBLOCK:
